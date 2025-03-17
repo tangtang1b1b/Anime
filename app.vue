@@ -23,7 +23,7 @@ onMounted(() => {
     <SEO />
     <NuxtLoadingIndicator />
     <NuxtLayout>
-      <NuxtPage :transition="page" />
+      <NuxtPage />
     </NuxtLayout>
   </div>
 </template>
@@ -31,7 +31,7 @@ onMounted(() => {
 <style>
 .page-enter-active,
 .page-leave-active {
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity 0.3s;
 }
 .page-enter,
 .page-leave-to {
