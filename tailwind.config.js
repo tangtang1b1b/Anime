@@ -22,8 +22,8 @@ export default {
       '6xl': '4400px'
     },
     fontFamily: {
-      Roboto: ['Roboto', 'sans-serif'],
-      Montserrat: ['Montserrat', 'sans-serif']
+      // Roboto: ['Roboto', 'sans-serif'],
+      Montserrat: ['Montserrat', 'sans-serif'],
       // Cinzel: ['Cinzel', 'serif'], // 英文優先
       // Noto: ['Noto Serif TC', 'serif'], // 中文優先
     },
@@ -89,11 +89,11 @@ export default {
     extend: {
       colors: {
         transparent: 'transparent',
-        black: '#000',
-        white: '#fff',
+        black: '#1A1E23',
+        white: '#E0E0E0',
         pr: {
-          light: '#C8F5FF',
-          DEFAULT: '#00B2FF',
+          light: '#5d5d9d',
+          DEFAULT: '#24292f',
           dark: '#0A74A1'
         },
         sec: {
