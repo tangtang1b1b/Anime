@@ -1,6 +1,11 @@
 <script setup>
-import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'; // 引入樣式
+const formData = {
+  name: '',
+  email: '',
+  age: '',
+  date: '',
+  other: '',
+}
 </script>
 
 <template>
@@ -97,10 +102,8 @@ import '@vuepic/vue-datepicker/dist/main.css'; // 引入樣式
               </AtomFormContainer>
               <AtomFormContainer class="col-span-2" label="name" name="任職期間">
                 <div class="grid grid-cols-2 gap-4">
-                  <!-- <AtomFormInput type="date" @update:word="(value) => updateFormField('name', value)" id="name" placeholder="職稱" /> -->
-                  <Datepicker v-model="date" month-picker class="custom-datepicker dp__theme_light" />
-                  <Datepicker v-model="date" month-picker class="custom-datepicker" />
-                  <!-- <AtomFormInput type="date" @update:word="(value) => updateFormField('name', value)" id="name" placeholder="職稱" /> -->
+                  <AtomFormInput type="date" @update:word="(value) => updateFormField('name', value)" id="name" placeholder="職稱" />
+                  <AtomFormInput type="date" @update:word="(value) => updateFormField('name', value)" id="name" placeholder="職稱" />
                 </div>
               </AtomFormContainer>
               <AtomFormContainer class="col-span-2" label="name" name="工作描述">

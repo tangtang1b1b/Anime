@@ -106,10 +106,9 @@ export default defineNuxtConfig({
     },
   },
 
-  "nitro": {
-    "plugins": ["~/server/db/index.js"],
+  nitro: {
+    // "plugins": ["~/server/db/index.js"],
   },
- 
 
   runtimeConfig: {
     APP_TITLE: process.env.APP_TITLE,
