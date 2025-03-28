@@ -1,6 +1,6 @@
 <script setup>
-import { useAllStore } from '@/store/all';
-const { allData } = toRefs(useAllStore())
+import { useAllStore } from '@/store/all'
+const { allData, theme } = toRefs(useAllStore())
 const { data } = await fetchRestful({ apiPath: '/data/index.json' })
 allData.value = data
 </script>
@@ -8,9 +8,11 @@ allData.value = data
 <template>
   <div>
     <LayoutHeader :data="allData?.menu" />
-    <main class="mx-auto bg-black min-h-screen pt-[70px] font-Montserrat">
-      <slot />
-    </main>
+    <n-config-provider :theme="theme">
+      <n-card :class="[theme ? 'bg-[#000]' : 'bg-[#f4f4f4]']" class="mx-auto min-h-screen pt-[70px] font-Montserrat">
+        <slot />
+      </n-card>
+    </n-config-provider>
     <LayoutFooter />
     <div id="modalsField"></div>
     <!-- <Cursor colorful /> -->

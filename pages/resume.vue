@@ -1,18 +1,23 @@
 <script setup>
 const formData = {
-  name: '',
-  email: '',
-  age: '',
-  date: '',
-  other: '',
+  info: {
+    name: '',
+    email: '',
+    age: '',
+    date: '',
+    other: '',
+  },
 }
 </script>
 
 <template>
   <main class="flex w-full text-white">
-    <div class="flex w-1/2 flex-col gap-8 px-8 py-5">
-      <AtomBlockArea>
-        <div class="text-xl font-bold">個人資訊</div>
+    <div class="w-1/2">
+      
+    </div>
+    <!-- <div class="flex w-1/2 flex-col gap-8 px-8 py-5"> -->
+    <!-- <AtomBlockArea>
+        <div class="text-xl font-bold">Information</div>
         <div class="grid grid-cols-2 gap-4">
           <AtomFormContainer label="name" name="職稱">
             <div class="relative w-full">
@@ -40,8 +45,8 @@ const formData = {
             </div>
           </AtomFormContainer>
         </div>
-      </AtomBlockArea>
-      <AtomBlockArea>
+      </AtomBlockArea> -->
+    <!-- <AtomBlockArea>
         <div class="text-xl font-bold">個人簡介</div>
         <div class="w-full">
           <AtomFormContainer label="name" name="">
@@ -50,8 +55,8 @@ const formData = {
             </div>
           </AtomFormContainer>
         </div>
-      </AtomBlockArea>
-      <AtomBlockArea>
+      </AtomBlockArea> -->
+    <!-- <AtomBlockArea>
         <div class="text-xl font-bold">社交連結</div>
         <div class="flex w-full flex-col gap-4">
           <div class="flex items-center gap-4">
@@ -70,8 +75,8 @@ const formData = {
             <AtomIcon name="plus" :size="14" />
           </div>
         </div>
-      </AtomBlockArea>
-      <AtomBlockArea>
+      </AtomBlockArea> -->
+    <!-- <AtomBlockArea>
         <div class="text-xl font-bold">技能</div>
         <div class="flex w-full flex-col gap-4">
           <div class="flex items-center gap-4">
@@ -84,8 +89,8 @@ const formData = {
             <AtomIcon name="plus" :size="14" />
           </div>
         </div>
-      </AtomBlockArea>
-      <AtomBlockArea>
+      </AtomBlockArea> -->
+    <!-- <AtomBlockArea>
         <div class="text-xl font-bold">工作經歷</div>
         <div class="flex w-full flex-col gap-4">
           <div class="flex flex-col gap-4 border-b border-white/50 pb-4">
@@ -120,8 +125,8 @@ const formData = {
             <AtomIcon name="plus" :size="14" />
           </div>
         </div>
-      </AtomBlockArea>
-      <AtomBlockArea>
+      </AtomBlockArea> -->
+    <!-- <AtomBlockArea>
         <div class="text-xl font-bold">學歷</div>
         <div class="flex w-full flex-col gap-4">
           <div class="flex items-center gap-4">
@@ -134,9 +139,9 @@ const formData = {
             <AtomIcon name="plus" :size="14" />
           </div>
         </div>
-      </AtomBlockArea>
-    </div>
-    <div class="w-1/2">222</div>
+      </AtomBlockArea> -->
+    <!-- </div> -->
+    <!-- <div class="w-1/2">222</div> -->
   </main>
 </template>
 

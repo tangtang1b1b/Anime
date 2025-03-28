@@ -47,7 +47,9 @@ export default defineNuxtConfig({
       mode: 'out-in',
     },
   },
-
+  build: {
+    transpile: ['naive-ui', '@css-render/vue3-ssr'],
+  },
   modules: [
     [
       '@pinia/nuxt',
