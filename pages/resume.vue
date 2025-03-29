@@ -1,4 +1,5 @@
 <script setup>
+const isPresent = ref(false)
 const formData = {
   info: {
     job: '',
@@ -140,7 +141,7 @@ const formData = {
         <!-- 學歷區塊 -->
         <NCard title="學歷" class="mb-4">
           <NSpace vertical>
-            <NSpace v-for="(edu, index) in formData.educations" :key="index" align="center">
+            <div v-for="(edu, index) in formData.educations" :key="index" align="center">
               <NGrid cols="2" x-gap="12">
                 <NGridItem>
                   <NFormItem label="學歷">
@@ -159,16 +160,20 @@ const formData = {
                 </NGridItem>
                 <NGridItem>
                   <NFormItem label="開始日期">
-<NDatePicker v-model:value="edu.startDate" type="date" placeholder="開始日期" clearable style="width: 100%" />
+                    <NDatePicker v-model:value="edu.startDate" type="date" placeholder="開始日期" clearable style="width: 100%" />
                   </NFormItem>
                 </NGridItem>
-                <NGridItem>
+                <NGridItem class="relative">
                   <NFormItem label="結束日期">
-<NDatePicker v-model:value="edu.endDate" type="date" placeholder="開始日期" clearable style="width: 100%" />
+                    <NDatePicker :disabled="isPresent" v-model:value="edu.endDate" type="date" placeholder="開始日期" clearable style="width: 100%" />
                   </NFormItem>
+                  <div class="absolute flex top-0 right-0 gap-2">
+                    <NSwitch size="small" v-model:value="isPresent" />
+                    <p class="leading-tight">仍在職</p>
+                  </div>
                 </NGridItem>
               </NGrid>
-            </NSpace>
+            </div>
           </NSpace>
         </NCard>
       </NSpace>
