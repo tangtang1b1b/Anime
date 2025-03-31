@@ -1,32 +1,50 @@
 <script setup>
+const container = ref(null)
+const isOpen = ref(true)
 const isPresent = ref(false)
-const formData = {
+const formData = ref({
   info: {
-    job: '',
-    name: '',
-    email: '',
-    phone: '',
-    date: '',
-    location: '',
-    other: '',
+    job: '前端工程師',
+    name: '神人',
+    email: 'god@gmail.com',
+    phone: '0912345678',
+    location: '桃園市',
+    other: '我是一個神人',
   },
   socials: [
-    { name: '', url: '' },
-    { name: '', url: '' },
+    { name: 'Github', url: 'https://github.com' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/' },
   ],
   skills: [
-    { name: '', url: '' },
-    { name: '', url: '' },
+    { name: 'JavaScript' },
+    { name: 'Nuxt3' },
   ],
-  works: [{ company: '', url: '', job: '', startDate: 0, endDate: 0, description: '' }],
-  educations: [{ company: '', url: '', job: '', startDate: 0, endDate: 0, description: '' }],
-}
+  works: [
+    { company: '版塊設計', job: '前端工程師', startDate: 0, endDate: 0, description: '動態網頁製作' },
+    { company: '大樹醫藥', job: '前端工程師', startDate: 0, endDate: 0, description: '官網製作、App開發維護' },
+  ],
+  educations: [
+    { name:'大學', school: '靜宜大學', major: '資訊傳播工程學系', startDate: 0, endDate: 0 },
+  ],
+})
+
+onMounted(() => {
+
+})
 </script>
 
 <template>
-  <main class="flex w-full text-white">
-    <div class="w-1/2">
-      <NSpace vertical class="p-4">
+  <main class="relative flex size-full text-white">
+    <div :class="[isOpen?'':'opacity-0']" class="absolute size-full pointer-events-none bg-black/50 duration-300 backdrop-blur"></div>
+    <div :class="[{ '-translate-x-1': !isOpen }, isOpen ? 'left-0' : '-left-1/2 shadow-inner']" class="menu | absolute bg-black h-full z-2 w-1/2 duration-300">
+      <div
+        :class="[isOpen ? 'translate-x-[calc(100%-18px)]' : 'hover:translate-x-[calc(100%-6px)] translate-x-[calc(100%-18px)]']"
+        class="absolute right-0 cursor-pointer top-1/2 -translate-y-1/2 z-1 flex items-center justify-center rounded-full bg-white duration-300"
+        @click="isOpen = !isOpen"
+      >
+        <AtomIcon name="open" :class="[isOpen ? 'rotate-0' : 'rotate-180']" class="text-black duration-300" :size="36" />
+      </div>
+      <NSpace vertical class="p-4 overflow-y-scroll h-full">
         <!-- 個人資訊區塊 -->
         <NCard title="個人資訊" class="mb-4">
           <NGrid cols="2" x-gap="12">
@@ -66,9 +84,9 @@ const formData = {
         <!-- 社交連結區塊 -->
         <NCard title="社交連結" class="mb-4">
           <NSpace vertical>
-            <div class="mb-2 flex items-center gap-4" v-for="(social, index) in formData.socials" :key="index" align="center">
-              <NInput v-model:value="formData.socials[index].name" placeholder="Github" />
-              <NInput v-model:value="formData.socials[index].url" placeholder="https://example.com" />
+            <div class="mb-2 flex items-center gap-4" v-for="(social, index) in formData.socials" :key="index">
+              <NInput v-model:value="social.name" placeholder="Github" />
+              <NInput v-model:value="social.url" placeholder="https://example.com" />
               <AtomIcon name="delete" class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light" />
             </div>
             <NDivider />
@@ -84,7 +102,7 @@ const formData = {
         <NCard title="技能" class="mb-4">
           <NSpace vertical>
             <div class="mb-2 flex items-center gap-4" v-for="(skill, index) in formData.skills" :key="index">
-              <NInput v-model:value="formData.skills[index].name" placeholder="技能名稱" />
+              <NInput v-model:value="skill.name" placeholder="技能名稱" />
               <AtomIcon name="delete" class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light" />
             </div>
             <NDivider />
@@ -125,15 +143,17 @@ const formData = {
                 </NGridItem>
                 <NGridItem span="2">
                   <NFormItem label="工作描述">
-                    <NInput
-                      type="textarea"
-                      v-model:value="formData.info.other"
-                      placeholder="請輸入您的個人簡介"
-                      :autosize="{ minRows: 3 }"
-                    />
+                    <NInput type="textarea" v-model:value="work.description" placeholder="請輸入您的個人簡介" :autosize="{ minRows: 3 }" />
                   </NFormItem>
                 </NGridItem>
               </NGrid>
+              <AtomIcon name="delete" class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light" />
+              <NDivider />
+            </div>
+            <div
+              class="flex w-fit cursor-pointer items-center gap-1 rounded-md border border-white/50 bg-black p-2 duration-300 hover:bg-[#000]"
+            >
+              <AtomIcon name="plus" :size="14" />
             </div>
           </NSpace>
         </NCard>
@@ -141,21 +161,21 @@ const formData = {
         <!-- 學歷區塊 -->
         <NCard title="學歷" class="mb-4">
           <NSpace vertical>
-            <div v-for="(edu, index) in formData.educations" :key="index" align="center">
+            <div v-for="(edu, index) in formData.educations" :key="index">
               <NGrid cols="2" x-gap="12">
+                <NGridItem>
+                  <NFormItem label="學校">
+                    <NInput v-model:value="edu.school" placeholder="學校名稱與學位" />
+                  </NFormItem>
+                </NGridItem>
                 <NGridItem>
                   <NFormItem label="學歷">
                     <NInput v-model:value="edu.name" placeholder="學校名稱與學位" />
                   </NFormItem>
                 </NGridItem>
-                <NGridItem>
-                  <NFormItem label="學校">
-                    <NInput v-model:value="edu.name" placeholder="學校名稱與學位" />
-                  </NFormItem>
-                </NGridItem>
                 <NGridItem span="2">
                   <NFormItem label="科系">
-                    <NInput v-model:value="edu.name" placeholder="學校名稱與學位" />
+                    <NInput v-model:value="edu.major" placeholder="學校名稱與學位" />
                   </NFormItem>
                 </NGridItem>
                 <NGridItem>
@@ -165,146 +185,40 @@ const formData = {
                 </NGridItem>
                 <NGridItem class="relative">
                   <NFormItem label="結束日期">
-                    <NDatePicker :disabled="isPresent" v-model:value="edu.endDate" type="date" placeholder="開始日期" clearable style="width: 100%" />
+                    <NDatePicker
+                      :disabled="isPresent"
+                      v-model:value="edu.endDate"
+                      type="date"
+                      placeholder="開始日期"
+                      clearable
+                      style="width: 100%"
+                    />
                   </NFormItem>
-                  <div class="absolute flex top-0 right-0 gap-2">
+                  <div class="absolute right-0 top-0 flex gap-2">
                     <NSwitch size="small" v-model:value="isPresent" />
                     <p class="leading-tight">仍在職</p>
                   </div>
                 </NGridItem>
               </NGrid>
+              <AtomIcon name="delete" class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light" />
+              <NDivider />
+            </div>
+            <div
+              class="flex w-fit cursor-pointer items-center gap-1 rounded-md border border-white/50 bg-black p-2 duration-300 hover:bg-[#000]"
+            >
+              <AtomIcon name="plus" :size="14" />
             </div>
           </NSpace>
         </NCard>
       </NSpace>
     </div>
-    <!-- <div class="flex w-1/2 flex-col gap-8 px-8 py-5"> -->
-    <!-- <AtomBlockArea>
-        <div class="text-xl font-bold">Information</div>
-        <div class="grid grid-cols-2 gap-4">
-          <AtomFormContainer label="name" name="職稱">
-            <div class="relative w-full">
-              <AtomFormInput @update:word="(value) => updateFormField('name', value)" id="name" placeholder="職稱" />
-            </div>
-          </AtomFormContainer>
-          <AtomFormContainer label="name" name="名字">
-            <div class="relative w-full">
-              <AtomFormInput @update:word="(value) => updateFormField('name', value)" id="name" placeholder="名字" />
-            </div>
-          </AtomFormContainer>
-          <AtomFormContainer label="name" name="信箱">
-            <div class="relative w-full">
-              <AtomFormInput @update:word="(value) => updateFormField('name', value)" id="name" placeholder="信箱" />
-            </div>
-          </AtomFormContainer>
-          <AtomFormContainer label="name" name="電話">
-            <div class="relative w-full">
-              <AtomFormInput @update:word="(value) => updateFormField('name', value)" id="name" placeholder="電話" />
-            </div>
-          </AtomFormContainer>
-          <AtomFormContainer label="name" name="居住地">
-            <div class="relative w-full">
-              <AtomFormInput @update:word="(value) => updateFormField('name', value)" id="name" placeholder="居住地" />
-            </div>
-          </AtomFormContainer>
+    <div class="w-full p-15 flex dev-blue">
+      <div class="flex aspect-[70/99] w-full dev-red">
+        <div class="w-1/3 bg-[#666]">
         </div>
-      </AtomBlockArea> -->
-    <!-- <AtomBlockArea>
-        <div class="text-xl font-bold">個人簡介</div>
-        <div class="w-full">
-          <AtomFormContainer label="name" name="">
-            <div class="relative w-full">
-              <AtomFormTextArea @update:word="(value) => updateFormField('other', value)" id="other" placeholder="其他" />
-            </div>
-          </AtomFormContainer>
-        </div>
-      </AtomBlockArea> -->
-    <!-- <AtomBlockArea>
-        <div class="text-xl font-bold">社交連結</div>
-        <div class="flex w-full flex-col gap-4">
-          <div class="flex items-center gap-4">
-            <AtomFormInput class="w-[45%]" @update:word="(value) => updateFormField('name', value)" id="name" placeholder="名稱" />
-            <AtomFormInput
-              class="w-[45%]"
-              @update:word="(value) => updateFormField('name', value)"
-              id="name"
-              placeholder="https://example.com"
-            />
-            <AtomIcon name="delete" class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light" />
-          </div>
-          <div
-            class="flex w-fit cursor-pointer items-center gap-1 rounded-md border border-white/50 bg-black p-2 duration-300 hover:bg-[#000]"
-          >
-            <AtomIcon name="plus" :size="14" />
-          </div>
-        </div>
-      </AtomBlockArea> -->
-    <!-- <AtomBlockArea>
-        <div class="text-xl font-bold">技能</div>
-        <div class="flex w-full flex-col gap-4">
-          <div class="flex items-center gap-4">
-            <AtomFormInput class="w-[90%]" @update:word="(value) => updateFormField('name', value)" id="name" placeholder="名稱" />
-            <AtomIcon name="delete" class="cursor-pointer text-white duration-300 hover:text-pr-light" />
-          </div>
-          <div
-            class="flex w-fit cursor-pointer items-center gap-1 rounded-md border border-white/50 bg-black p-2 duration-300 hover:bg-[#000]"
-          >
-            <AtomIcon name="plus" :size="14" />
-          </div>
-        </div>
-      </AtomBlockArea> -->
-    <!-- <AtomBlockArea>
-        <div class="text-xl font-bold">工作經歷</div>
-        <div class="flex w-full flex-col gap-4">
-          <div class="flex flex-col gap-4 border-b border-white/50 pb-4">
-            <div class="grid grid-cols-2 gap-4">
-              <AtomFormContainer label="name" name="公司名稱">
-                <div class="relative w-full">
-                  <AtomFormInput @update:word="(value) => updateFormField('name', value)" id="name" placeholder="職稱" />
-                </div>
-              </AtomFormContainer>
-              <AtomFormContainer label="name" name="職稱">
-                <div class="relative w-full">
-                  <AtomFormInput @update:word="(value) => updateFormField('name', value)" id="name" placeholder="職稱" />
-                </div>
-              </AtomFormContainer>
-              <AtomFormContainer class="col-span-2" label="name" name="任職期間">
-                <div class="grid grid-cols-2 gap-4">
-                  <AtomFormInput type="date" @update:word="(value) => updateFormField('name', value)" id="name" placeholder="職稱" />
-                  <AtomFormInput type="date" @update:word="(value) => updateFormField('name', value)" id="name" placeholder="職稱" />
-                </div>
-              </AtomFormContainer>
-              <AtomFormContainer class="col-span-2" label="name" name="工作描述">
-                <div class="relative w-full">
-                  <AtomFormTextArea @update:word="(value) => updateFormField('other', value)" id="other" placeholder="其他" />
-                </div>
-              </AtomFormContainer>
-            </div>
-            <AtomIcon name="delete" class="cursor-pointer text-white duration-300 hover:text-pr-light" />
-          </div>
-          <div
-            class="flex w-fit cursor-pointer items-center gap-1 rounded-md border border-white/50 bg-black p-2 duration-300 hover:bg-[#000]"
-          >
-            <AtomIcon name="plus" :size="14" />
-          </div>
-        </div>
-      </AtomBlockArea> -->
-    <!-- <AtomBlockArea>
-        <div class="text-xl font-bold">學歷</div>
-        <div class="flex w-full flex-col gap-4">
-          <div class="flex items-center gap-4">
-            <AtomFormInput class="w-[90%]" @update:word="(value) => updateFormField('name', value)" id="name" placeholder="名稱" />
-            <AtomIcon name="delete" class="cursor-pointer text-white duration-300 hover:text-pr-light" />
-          </div>
-          <div
-            class="flex w-fit cursor-pointer items-center gap-1 rounded-md border border-white/50 bg-black p-2 duration-300 hover:bg-[#000]"
-          >
-            <AtomIcon name="plus" :size="14" />
-          </div>
-        </div>
-      </AtomBlockArea> -->
-    <!-- </div> -->
-    <!-- <div class="w-1/2">222</div> -->
+        <div class="w-2/3 bg-white"></div>
+      </div>
+    </div>
   </main>
 </template>
 
@@ -313,7 +227,11 @@ const formData = {
   --dp-background-color: #24292f; /* 修改主色調 */
   --dp-text-color: #fff;
   --dp-border-radius: 6px; /* 設定圓角 */
-  --dp-border-color: rgb(224 224 224 / 0.5);
+  --dp-border-color: rgba(0, 0, 0, 0.5);
   --dp-border-color-hover: #5d5d9d;
+}
+::-webkit-scrollbar {
+  width: 1px;
+  height: 1px;
 }
 </style>

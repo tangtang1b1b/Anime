@@ -178,7 +178,8 @@ export default {
         card: '0px 4px 10px rgba(57, 87, 132, 0.2)',
         filter: '0px 4px 25px rgba(12, 12, 12, 0.1)',
         nav: '0px 2px 8px rgba(0, 0, 0, 0.15)',
-        popup: '0px 4px 12px rgba(0, 0, 0, 0.1)'
+        popup: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+        inner: '12px 0px 12px rgba(255, 255, 255, 0.15)',
       },
       borderRadius: {
         none: '0',
