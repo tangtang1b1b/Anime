@@ -1,4 +1,5 @@
 <script setup>
+import { darkTheme } from 'naive-ui'
 import { useAllStore } from '@/store/all'
 const { allData, theme } = toRefs(useAllStore())
 const { data } = await fetchRestful({ apiPath: '/data/index.json' })
@@ -7,7 +8,7 @@ allData.value = data
 
 <template>
   <div>
-    <!-- <LayoutHeader :data="allData?.menu" /> -->
+    <LayoutHeader :data="allData?.menu" />
     <n-config-provider :theme="theme">
       <div :class="[theme ? 'bg-[#000]' : 'bg-[#f4f4f4]']" class="mx-auto h-[calc(100vh-45px)] pt-[70px] font-Montserrat">
         <slot />

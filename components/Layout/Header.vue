@@ -43,13 +43,13 @@ onMounted(() => {
           <img class="w-full" :src="fetchImg('/images/logo.png')" alt="logo" />
         </NuxtLinkLocale>
       </div>
-      <div class="flex items-center gap-2 font-Montserrat">
-        <!-- <n-switch v-model:value="isDarkMode">
+      <!-- <div class="flex items-center gap-2 font-Montserrat">
+        <n-switch v-model:value="isDarkMode">
           <template #checked> OFF </template>
           <template #unchecked> ON </template>
-        </n-switch> -->
-        <!-- <p :theme="theme" class="text-white">闇黑模式</p> -->
-      </div>
+        </n-switch>
+        <p :theme="theme" class="text-white">闇黑模式</p>
+      </div> -->
       <!-- <div class="flex divide-x text-white font-Montserrat">
         <SwitchLocalePathLink locale="zh" :class="locale === 'zh' ? 'text-txt-super-light' : ''" class="px-2 hover:text-txt-super-light duration-300">zh</SwitchLocalePathLink>
         <SwitchLocalePathLink locale="en" :class="locale === 'en' ? 'text-txt-super-light' : ''" class="px-2 hover:text-txt-super-light duration-300">en</SwitchLocalePathLink>
