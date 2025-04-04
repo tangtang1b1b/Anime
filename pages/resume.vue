@@ -1,11 +1,30 @@
 <script setup>
 import { jsPDF } from 'jspdf/dist/jspdf.umd.min.js'
 import html2canvas from 'html2canvas'
-const container = ref(null)
 const isOpen = ref(true)
-const isPresent = ref(false)
 
 const profileImage = ref(null) // 用來存放圖片的 URL
+
+const formData = ref({
+  info: {
+    job: 'Frontend Engineer',
+    name: 'Eric Kao',
+    email: 'god@gmail.com',
+    phone: '0912345678',
+    location: '桃園市',
+    other: '我是一個神人',
+  },
+  socials: [
+    { name: 'Github', url: 'https://github.com' },
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/' },
+  ],
+  skills: [{ name: 'JavaScript' }, { name: 'Nuxt3' }],
+  works: [
+    { company: '版塊設計', job: '前端工程師', startDate: 0, endDate: 0, description: '動態網頁製作' },
+    { company: '大樹醫藥', job: '前端工程師', startDate: 0, endDate: 0, description: '官網製作、App開發維護', isPresent: false },
+  ],
+  educations: [{ name: '大學', school: '靜宜大學', major: '資訊傳播工程學系', startDate: 0, endDate: 0, isPresent: false }],
+})
 
 // 處理圖片上傳
 const handleImageUpload = (info) => {
@@ -42,7 +61,7 @@ const downloadPDF = async () => {
     )
 
     const canvas = await html2canvas(element, {
-      scale: 3, // 提高渲染質量
+      scale: 1.5, // 提高渲染質量
       useCORS: true,
       width: element.offsetWidth,
       height: element.offsetHeight,
@@ -72,34 +91,55 @@ const downloadPDF = async () => {
   }
 }
 
-const formData = ref({
-  info: {
-    job: 'Frontend Engineer',
-    name: 'Eric Kao',
-    email: 'god@gmail.com',
-    phone: '0912345678',
-    location: '桃園市',
-    other: '我是一個神人',
-  },
-  socials: [
-    { name: 'Github', url: 'https://github.com' },
-    { name: 'LinkedIn', url: 'https://www.linkedin.com/' },
-  ],
-  skills: [{ name: 'JavaScript' }, { name: 'Nuxt3' }],
-  works: [
-    { company: '版塊設計', job: '前端工程師', startDate: 0, endDate: 0, description: '動態網頁製作' },
-    { company: '大樹醫藥', job: '前端工程師', startDate: 0, endDate: 0, description: '官網製作、App開發維護' },
-  ],
-  educations: [{ name: '大學', school: '靜宜大學', major: '資訊傳播工程學系', startDate: 0, endDate: 0 }],
-})
+const addSocial = () => {
+  formData.value.socials.push({ name: '', url: '' })
+}
+const removeSocial = (index) => {
+  formData.value.socials.splice(index, 1)
+}
+
+const addSkill = () => {
+  formData.value.skills.push({ name: '' })
+}
+const removeSkill = (index) => {
+  formData.value.skills.splice(index, 1)
+}
+
+const addWork = () => {
+  formData.value.works.map((work) => {
+    delete work.isPresent
+  })
+  formData.value.works.push({ company: '', job: '', startDate: 0, endDate: 0, description: '', isPresent: false })
+}
+const removeWork = (index) => {
+  formData.value.works.splice(index, 1)
+  formData.value.works.map((work) => {
+    delete work.isPresent
+  })
+  formData.value.works[formData.value.works.length - 1].isPresent = false
+}
+
+const addEducation = () => {
+  formData.value.educations.forEach((edu) => {
+    delete edu.isPresent
+  })
+  formData.value.educations.push({ name: '', school: '', major: '', startDate: 0, endDate: 0, isPresent: false })
+}
+const removeEducation = (index) => {
+  formData.value.educations.splice(index, 1)
+  formData.value.educations.forEach((edu) => {
+    delete edu.isPresent
+  })
+  formData.value.educations[formData.value.educations.length - 1].isPresent = false
+}
 
 onMounted(() => {})
 </script>
 
 <template>
   <main class="relative flex size-full text-white">
-    <div class="absolute bottom-10 right-10 z-3 size-10 cursor-pointer rounded-full group origin-center" @click="downloadPDF">
-      <AtomIcon name="download" class="text-white group-hover:scale-125 duration-300" />
+    <div class="group absolute bottom-10 right-10 z-3 size-10 origin-center cursor-pointer rounded-full" @click="downloadPDF">
+      <AtomIcon name="download" class="text-white duration-300 group-hover:scale-125" />
     </div>
     <div
       :class="[isOpen ? '' : 'pointer-events-none opacity-0']"
@@ -167,11 +207,16 @@ onMounted(() => {})
             <div class="mb-2 flex items-center gap-4" v-for="(social, index) in formData.socials" :key="index">
               <NInput v-model:value="social.name" placeholder="Github" />
               <NInput v-model:value="social.url" placeholder="https://example.com" />
-              <AtomIcon name="delete" class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light" />
+              <AtomIcon
+                name="delete"
+                class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light"
+                @click="removeSocial(index)"
+              />
             </div>
             <NDivider />
             <div
               class="flex w-fit cursor-pointer items-center gap-1 rounded-md border border-white/50 bg-black p-2 duration-300 hover:bg-[#000]"
+              @click="addSocial"
             >
               <AtomIcon name="plus" :size="14" />
             </div>
@@ -183,11 +228,16 @@ onMounted(() => {})
           <NSpace vertical>
             <div class="mb-2 flex items-center gap-4" v-for="(skill, index) in formData.skills" :key="index">
               <NInput v-model:value="skill.name" placeholder="技能名稱" />
-              <AtomIcon name="delete" class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light" />
+              <AtomIcon
+                name="delete"
+                class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light"
+                @click="removeSkill(index)"
+              />
             </div>
             <NDivider />
             <div
               class="flex w-fit cursor-pointer items-center gap-1 rounded-md border border-white/50 bg-black p-2 duration-300 hover:bg-[#000]"
+              @click="addSkill"
             >
               <AtomIcon name="plus" :size="14" />
             </div>
@@ -209,17 +259,26 @@ onMounted(() => {})
                     <NInput v-model:value="work.job" placeholder="職稱" />
                   </NFormItem>
                 </NGridItem>
-                <NGridItem span="2">
-                  <NFormItem label="任職期間">
-                    <NGrid cols="2" x-gap="12">
-                      <NGridItem>
-                        <NDatePicker v-model:value="work.startDate" type="date" placeholder="開始日期" clearable style="width: 100%" />
-                      </NGridItem>
-                      <NGridItem>
-                        <NDatePicker v-model:value="work.endDate" type="date" placeholder="結束日期" clearable style="width: 100%" />
-                      </NGridItem>
-                    </NGrid>
+                <NGridItem>
+                  <NFormItem label="開始日期">
+                    <NDatePicker v-model:value="work.startDate" type="date" placeholder="開始日期" clearable style="width: 100%" />
                   </NFormItem>
+                </NGridItem>
+                <NGridItem class="relative">
+                  <NFormItem label="結束日期">
+                    <NDatePicker
+                      :disabled="work.isPresent"
+                      v-model:value="work.endDate"
+                      type="date"
+                      placeholder="開始日期"
+                      clearable
+                      style="width: 100%"
+                    />
+                  </NFormItem>
+                  <div v-if="work.hasOwnProperty('isPresent')" class="absolute right-0 top-0 flex gap-2">
+                    <NSwitch size="small" v-model:value="work.isPresent" />
+                    <p class="leading-tight">仍在職</p>
+                  </div>
                 </NGridItem>
                 <NGridItem span="2">
                   <NFormItem label="工作描述">
@@ -227,11 +286,16 @@ onMounted(() => {})
                   </NFormItem>
                 </NGridItem>
               </NGrid>
-              <AtomIcon name="delete" class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light" />
+              <AtomIcon
+                name="delete"
+                class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light"
+                @click="removeWork(index)"
+              />
               <NDivider />
             </div>
             <div
               class="flex w-fit cursor-pointer items-center gap-1 rounded-md border border-white/50 bg-black p-2 duration-300 hover:bg-[#000]"
+              @click="addWork"
             >
               <AtomIcon name="plus" :size="14" />
             </div>
@@ -266,7 +330,7 @@ onMounted(() => {})
                 <NGridItem class="relative">
                   <NFormItem label="結束日期">
                     <NDatePicker
-                      :disabled="isPresent"
+                      :disabled="edu.isPresent"
                       v-model:value="edu.endDate"
                       type="date"
                       placeholder="開始日期"
@@ -274,17 +338,22 @@ onMounted(() => {})
                       style="width: 100%"
                     />
                   </NFormItem>
-                  <div class="absolute right-0 top-0 flex gap-2">
-                    <NSwitch size="small" v-model:value="isPresent" />
-                    <p class="leading-tight">仍在職</p>
+                  <div v-if="edu.hasOwnProperty('isPresent')" class="absolute right-0 top-0 flex gap-2">
+                    <NSwitch size="small" v-model:value="edu.isPresent" />
+                    <p class="leading-tight">仍在學</p>
                   </div>
                 </NGridItem>
               </NGrid>
-              <AtomIcon name="delete" class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light" />
+              <AtomIcon
+                name="delete"
+                class="shrink-0 cursor-pointer text-white duration-300 hover:text-pr-light"
+                @click="removeEducation(index)"
+              />
               <NDivider />
             </div>
             <div
               class="flex w-fit cursor-pointer items-center gap-1 rounded-md border border-white/50 bg-black p-2 duration-300 hover:bg-[#000]"
+              @click="addEducation"
             >
               <AtomIcon name="plus" :size="14" />
             </div>
@@ -295,7 +364,7 @@ onMounted(() => {})
     <div class="flex w-full justify-center px-15 py-5">
       <div id="pdf-container" class="flex aspect-[70/99] h-full">
         <div class="flex w-2/5 flex-col gap-3 bg-[#666] px-3 py-4">
-          <img class="aspect-square rounded-md object-cover" :src="profileImage" alt="Profile Image" />
+          <img v-if="profileImage" class="aspect-square rounded-md object-cover" :src="profileImage" alt="Profile Image" />
           <div class="text-xs">
             <div class="mb-2 text-sm font-bold">MY CONTACT</div>
             <div>
