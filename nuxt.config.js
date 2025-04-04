@@ -3,7 +3,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import path from 'path'
 
 export default defineNuxtConfig({
-  ssr: true,
+  ssr: false,
 
   app: {
     router: {
