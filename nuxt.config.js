@@ -33,9 +33,9 @@ export default defineNuxtConfig({
         { rel: 'apple-touch-icon', sizes: '180x180', href: `${process.env.APP_URL}/apple-touch-icon.png` },
         { rel: 'icon', type: 'image/png', sizes: '192x192', href: `${process.env.APP_URL}/android-chrome-192x192.png` },
         { rel: 'icon', type: 'image/png', sizes: '512x512', href: `${process.env.APP_URL}/android-chrome-512x512.png` },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200..900&display=swap' },
+        // { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap' },
+        // { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap' },
+        // { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@200..900&display=swap' },
       ],
       noscript: [
         // <noscript>JavaScript is required</noscript>
@@ -47,7 +47,9 @@ export default defineNuxtConfig({
       mode: 'out-in',
     },
   },
-
+  build: {
+    transpile: ['naive-ui', '@css-render/vue3-ssr'],
+  },
   modules: [
     [
       '@pinia/nuxt',
@@ -104,6 +106,10 @@ export default defineNuxtConfig({
       tailwindcss: {},
       autoprefixer: {},
     },
+  },
+
+  nitro: {
+    // "plugins": ["~/server/db/index.js"],
   },
 
   runtimeConfig: {

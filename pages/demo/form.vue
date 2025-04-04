@@ -132,9 +132,6 @@ const options = ref([
       <AtomFormContainer class="flex items-center gap-10 text-[#8D8D8D]" label="other" name="其他">
         <div class="relative w-full">
           <AtomFormTextArea @update:word="(value) => updateFormField('other', value)" id="other" placeholder="其他" />
-          <Transition name="fade">
-            <div class="absolute top-[calc(100%+5px)] text-[11px] font-semibold text-[#ff405b]" v-if="errors.other">{{ errors.other }}</div>
-          </Transition>
         </div>
       </AtomFormContainer>
       <button type="submit" class="bg-[#31B05C] block font-semibold text-center text-white rounded-[190px] w-[185px] h-[30px] mx-auto text-[15px] leading-[18.15px]">送出</button>

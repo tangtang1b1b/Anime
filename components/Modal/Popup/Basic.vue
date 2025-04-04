@@ -11,10 +11,15 @@ const props = defineProps({
 })
 const { modelValue, isOpen } = toRefs(props)
 
-const emits = defineEmits(['update:modelValue'])
+const emits = defineEmits(['update:modelValue', 'update:confirm'])
 
 const closeModal = () => {
   emits('update:modelValue', false)
+}
+
+const confirm = () => {
+  closeModal()
+  emits('update:confirm')
 }
 </script>
 
@@ -24,21 +29,26 @@ const closeModal = () => {
       <AtomBackdrop :is-open="isOpen" @click="closeModal" />
       <Transition name="fade" appear>
         <div
-          class="absolute left-1/2 top-1/2 flex h-[310px] w-[290px] -translate-x-1/2 -translate-y-1/2 flex-col justify-between rounded-[22px] bg-white px-[30px] py-[18px] shadow-popup"
+          class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col gap-3 justify-between rounded-lg bg-white p-5 shadow-popup"
         >
           <div>
-            <div class="mb-[25px] text-[#1DA539]">
-              <p class="text-center text-[18px] font-semibold leading-[21.78px]">保密條款</p>
-            </div>
-            <div class="text-center text-[15px] font-medium leading-[26px] text-[#333333]">
-              為保障求職者權益，特此聲明：<br />提供的個人資訊將採絕對保密機制
+            <div class="text-center text-xl font-medium leading-[26px] text-alert">
+              確定要刪除此筆資料嗎？
             </div>
           </div>
-          <div
-            class="mx-auto h-[30px] w-[185px] cursor-pointer content-center rounded-[190px] bg-[#31B05C] text-center text-[15px] font-semibold leading-[18.15px] text-white duration-300 hover:brightness-110"
-            @click="closeModal"
-          >
-            確認
+          <div class="flex w-full gap-3">
+            <div
+              class="w-1/2 cursor-pointer content-center rounded-lg p-2 bg-white hover:bg-[#31B05C] hover:text-white text-center text-[15px] font-semibold border-[#31B05C] border leading-[18.15px] text-[#31B05C] duration-300 hover:brightness-110"
+              @click="confirm"
+            >
+              確認
+            </div>
+            <div
+              class="w-1/2 cursor-pointer content-center rounded-lg p-2 bg-[#31B05C] text-center text-[15px] font-semibold leading-[18.15px] text-white duration-300 hover:brightness-110"
+              @click="closeModal"
+            >
+              取消
+            </div>
           </div>
         </div>
       </Transition>
