@@ -1,7 +1,9 @@
 <script setup>
+import { useAllStore } from '@/store/all'
+const { windowWidth } = toRefs(useAllStore())
 import { jsPDF } from 'jspdf/dist/jspdf.umd.min.js'
 import html2canvas from 'html2canvas'
-const isOpen = ref(true)
+const isOpen = ref(false)
 
 const profileImage = ref(null) // 用來存放圖片的 URL
 
@@ -133,34 +135,45 @@ const removeEducation = (index) => {
   formData.value.educations[formData.value.educations.length - 1].isPresent = false
 }
 
+const checkDate = (date, isPresent) => {
+  return isPresent ? '現今' : date
+}
+
 onMounted(() => {})
 </script>
 
 <template>
   <main class="relative flex size-full text-white">
-    <div class="group absolute bottom-10 right-10 z-3 size-10 origin-center cursor-pointer rounded-full" @click="downloadPDF">
+    <!-- <div class="group absolute bottom-0 right-0 z-3 size-10 flex justify-center items-center origin-center cursor-pointer rounded-full" @click="downloadPDF">
       <AtomIcon name="download" class="text-white duration-300 group-hover:scale-125" />
-    </div>
+    </div> -->
     <div
       :class="[isOpen ? '' : 'pointer-events-none opacity-0']"
       @click="isOpen = false"
-      class="absolute size-full bg-black/50 backdrop-blur duration-300"
+      class="absolute size-full bg-black/50 backdrop-blur duration-300 xl:hidden"
     ></div>
     <div
-      :class="[{ '-translate-x-1': !isOpen }, isOpen ? 'left-0' : '-left-1/2 shadow-inner']"
-      class="menu | absolute z-2 h-full w-1/2 bg-black duration-300"
+      :class="[{ '-translate-x-1': !isOpen }, isOpen ? 'left-0' : 'left-[-85%] lg:-left-1/2']"
+      class="menu | absolute z-2 h-full w-[85%] lg:w-1/2 bg-black duration-300 xl:static"
     >
       <div
-        :class="[isOpen ? 'translate-x-[calc(100%-18px)]' : 'translate-x-[calc(100%-18px)] hover:translate-x-[calc(100%-6px)]']"
-        class="absolute right-0 top-1/2 z-1 flex -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white duration-300"
+        :class="[isOpen ? 'translate-x-[calc(100%-10px)] xl:translate-x-[calc(100%-18px)]' : 'translate-x-[calc(100%+9px)]']"
+        class="absolute right-0 top-1/2 z-1 flex -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white duration-300 xl:hidden"
         @click="isOpen = !isOpen"
       >
-        <AtomIcon name="open" :class="[isOpen ? 'rotate-0' : 'rotate-180']" class="text-black duration-300" :size="36" />
+        <AtomIcon name="open" :class="[isOpen ? 'rotate-0' : 'rotate-180']" class="text-black duration-300 hidden xl:block" :size="36" />
+        <AtomIcon name="open" :class="[isOpen ? 'rotate-0' : 'rotate-180']" class="text-black duration-300 xl:hidden" :size="20" />
+      </div>
+      <div
+        class="group absolute bottom-0 right-0 z-3 flex size-10 origin-center translate-x-[calc(100%+5px)] cursor-pointer items-center justify-center rounded-full"
+        @click="downloadPDF"
+      >
+        <AtomIcon name="download" class="text-white duration-300 group-hover:scale-125" />
       </div>
       <NSpace vertical class="h-full overflow-y-scroll p-4">
         <!-- 個人資訊區塊 -->
         <NCard title="個人資訊" class="mb-4">
-          <NGrid cols="2" x-gap="12">
+          <NGrid :cols="windowWidth < 768 ? '1':'2'" x-gap="12">
             <NGridItem>
               <NFormItem label="職稱">
                 <NInput v-model:value="formData.info.job" placeholder="職稱" />
@@ -248,7 +261,7 @@ onMounted(() => {})
         <NCard title="工作經歷" class="mb-4">
           <NSpace vertical>
             <div v-for="(work, index) in formData.works" :key="index">
-              <NGrid cols="2" x-gap="12">
+              <NGrid :cols="windowWidth < 768 ? '1':'2'" x-gap="12">
                 <NGridItem>
                   <NFormItem label="公司名稱">
                     <NInput v-model:value="work.company" placeholder="公司名稱" />
@@ -270,7 +283,7 @@ onMounted(() => {})
                       :disabled="work.isPresent"
                       v-model:value="work.endDate"
                       type="date"
-                      placeholder="開始日期"
+                      placeholder="結束日期"
                       clearable
                       style="width: 100%"
                     />
@@ -306,7 +319,7 @@ onMounted(() => {})
         <NCard title="學歷" class="mb-4">
           <NSpace vertical>
             <div v-for="(edu, index) in formData.educations" :key="index">
-              <NGrid cols="2" x-gap="12">
+              <NGrid :cols="windowWidth < 768 ? '1':'2'" x-gap="12">
                 <NGridItem>
                   <NFormItem label="學校">
                     <NInput v-model:value="edu.school" placeholder="學校名稱與學位" />
@@ -333,7 +346,7 @@ onMounted(() => {})
                       :disabled="edu.isPresent"
                       v-model:value="edu.endDate"
                       type="date"
-                      placeholder="開始日期"
+                      placeholder="結束日期"
                       clearable
                       style="width: 100%"
                     />
@@ -361,8 +374,8 @@ onMounted(() => {})
         </NCard>
       </NSpace>
     </div>
-    <div class="flex w-full justify-center px-15 py-5">
-      <div id="pdf-container" class="flex aspect-[70/99] h-full">
+    <div class="flex w-full justify-center items-center px-7 py-7 xl:px-15 xl:py-5 xl:w-1/2">
+      <div id="pdf-container" class="flex aspect-[70/99] overflow-y-hidden h-fit w-full sm:h-full sm:w-auto">
         <div class="flex w-2/5 flex-col gap-3 bg-[#666] px-3 py-4">
           <img v-if="profileImage" class="aspect-square rounded-md object-cover" :src="profileImage" alt="Profile Image" />
           <div class="text-xs">
@@ -393,8 +406,8 @@ onMounted(() => {})
             </div>
           </div>
         </div>
-        <div class="flex w-3/5 flex-col gap-3 bg-white px-2 text-black">
-          <div class="flex flex-col pb-5 pt-10">
+        <div class="flex w-3/5 flex-col gap-1 xl:gap-3 bg-white px-2 text-black">
+          <div class="flex flex-col pt-6 xl:pb-5 xl:pt-10">
             <div class="text-3xl font-bold leading-none">{{ formData.info.name }}</div>
             <div class="text-sm font-bold text-[#666]">{{ formData.info.job }}</div>
           </div>
@@ -408,7 +421,8 @@ onMounted(() => {})
               <div class="text-sm font-bold">{{ work.company }}</div>
               <div class="text-xs font-bold text-[#666]">{{ work.job }}</div>
               <div class="text-[10px] text-[#666]">
-                {{ new Date(work.startDate).toLocaleDateString() }} - {{ new Date(work.endDate).toLocaleDateString() }}
+                {{ new Date(work.startDate).toLocaleDateString() }} -
+                {{ work.isPresent ? '現今': new Date(work.endDate).toLocaleDateString() }}
               </div>
               <p class="text-xs">{{ work.description }}</p>
             </div>
@@ -421,7 +435,7 @@ onMounted(() => {})
               </div>
               <div class="text-xs font-bold text-[#666]">{{ edu.major }}</div>
               <div class="text-[10px] text-[#666]">
-                {{ new Date(edu.startDate).toLocaleDateString() }} - {{ new Date(edu.endDate).toLocaleDateString() }}
+                {{ new Date(edu.startDate).toLocaleDateString() }} - {{ edu.isPresent ? '現今': new Date(edu.endDate).toLocaleDateString() }}
               </div>
             </div>
           </div>

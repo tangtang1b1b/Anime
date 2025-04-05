@@ -36,12 +36,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <header class="fixed left-0 top-0 z-100 h-[70px] w-full border-b border-white bg-black">
-    <div class="z-50 mx-auto flex size-full items-center justify-between bg-txt-light px-5 duration-300">
-      <div class="flex h-full w-40 items-center justify-center">
-        <NuxtLinkLocale to="/" class="size-full content-center">
-          <img class="w-full" :src="fetchImg('/images/logo.png')" alt="logo" />
-        </NuxtLinkLocale>
+  <header class="fixed left-0 top-0 z-100 h-[70px] w-full border-b border-black bg-black">
+    <div class="z-50 mx-auto flex size-full items-center justify-center bg-black px-5 duration-300">
+      <div class="flex h-full w-full items-center justify-center text-white text-lg lg:text-2xl font-bold font-Montserrat">
+        Resume-Maker
       </div>
       <!-- <div class="flex items-center gap-2 font-Montserrat">
         <n-switch v-model:value="isDarkMode">
