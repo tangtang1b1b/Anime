@@ -70,21 +70,28 @@ const downloadPDF = async () => {
     })
 
     const imgData = canvas.toDataURL('image/png')
-    iimg.value = imgData
     const pdf = new jsPDF('p', 'mm', 'a4')
     const pdfWidth = pdf.internal.pageSize.getWidth()
     const pdfHeight = pdf.internal.pageSize.getHeight()
 
-    // 計算圖片的寬高比例
-    const imgWidth = pdfWidth
-    const imgHeight = (canvas.height * imgWidth) / canvas.width
+    let imgHeight = (canvas.height * pdfWidth) / canvas.width
+    let position = 0
 
-    // 如果圖片高度超出 PDF 頁面高度，則縮放圖片
-    if (imgHeight > pdfHeight) {
-      const scaleFactor = pdfHeight / imgHeight
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth * scaleFactor, pdfHeight)
-    } else {
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight)
+    while (imgHeight > 0) {
+      pdf.addImage(
+        imgData,
+        'PNG',
+        0,
+        position,
+        pdfWidth,
+        Math.min(imgHeight, pdfHeight)
+      )
+      imgHeight -= pdfHeight
+      position -= pdfHeight
+
+      if (imgHeight > 0) {
+        pdf.addPage()
+      }
     }
 
     pdf.save('resume.pdf')
@@ -374,12 +381,12 @@ onMounted(() => {})
         </NCard>
       </NSpace>
     </div>
-    <div class="flex w-full justify-center items-center px-7 py-7 xl:px-15 xl:py-5 xl:w-1/2">
-      <div id="pdf-container" class="flex aspect-[70/99] overflow-y-hidden h-fit w-full sm:h-full sm:w-auto">
-        <div class="flex w-2/5 flex-col gap-3 bg-[#666] px-3 py-4">
+    <div class="flex w-full justify-center px-7 py-7 xl:px-15 xl:py-5 xl:w-1/2">
+      <div id="pdf-container" class="flex aspect-[70/99] h-fit w-full sm:h-full sm:w-auto">
+        <div class="flex w-2/5 overflow-y-scroll flex-col gap-3 bg-[#666] px-3 py-4">
           <img v-if="profileImage" class="aspect-square rounded-md object-cover" :src="profileImage" alt="Profile Image" />
-          <div class="text-xs">
-            <div class="mb-2 text-sm font-bold">MY CONTACT</div>
+          <div class="text-responsive_content">
+            <div class="mb-2 font-bold">MY CONTACT</div>
             <div>
               <p class="font-bold">Phone</p>
               <p>{{ formData.info.phone }}</p>
@@ -393,48 +400,48 @@ onMounted(() => {})
               <p>{{ formData.info.location }}</p>
             </div>
           </div>
-          <div class="text-xs">
-            <div class="mb-2 text-sm font-bold">LINKS</div>
+          <div class="text-responsive_content">
+            <div class="mb-2 font-bold">LINKS</div>
             <div v-for="(social, index) in formData.socials" :key="`${social.name}${index}`">
-              <nuxt-link :to="social.url" class="text-xs">{{ social.name }}</nuxt-link>
+              <nuxt-link :to="social.url" class="">{{ social.name }}</nuxt-link>
             </div>
           </div>
-          <div class="text-xs">
-            <div class="mb-2 text-sm font-bold">SKILLS</div>
+          <div class="text-responsive_content">
+            <div class="mb-2 font-bold">SKILLS</div>
             <div v-for="(skill, index) in formData.skills" :key="`${skill.name}${index}`">
-              <p class="text-xs">{{ skill.name }}</p>
+              <p class="">{{ skill.name }}</p>
             </div>
           </div>
         </div>
-        <div class="flex w-3/5 flex-col gap-1 xl:gap-3 bg-white px-2 text-black">
+        <div class="flex w-3/5 overflow-y-scroll flex-col gap-1 xl:gap-3 bg-white px-2 text-black">
           <div class="flex flex-col pt-6 xl:pb-5 xl:pt-10">
-            <div class="text-3xl font-bold leading-none">{{ formData.info.name }}</div>
-            <div class="text-sm font-bold text-[#666]">{{ formData.info.job }}</div>
+            <div class="text-responsive_title font-bold leading-none">{{ formData.info.name }}</div>
+            <div class="text-responsive_title font-bold text-[#666]">{{ formData.info.job }}</div>
           </div>
           <div>
-            <div class="mb-1 font-bold">Profile</div>
-            <div class="text-[10px]">{{ formData.info.other }}</div>
+            <div class="mb-1 font-bold text-responsive_title">Profile</div>
+            <div class="text-responsive_content">{{ formData.info.other }}</div>
           </div>
           <div>
-            <div class="mb-1 font-bold">Experience</div>
+            <div class="mb-1 text-responsive_title font-bold">Experience</div>
             <div v-for="(work, index) in formData.works" :key="`${work.company}${index}`" class="mb-2 flex flex-col">
-              <div class="text-sm font-bold">{{ work.company }}</div>
-              <div class="text-xs font-bold text-[#666]">{{ work.job }}</div>
-              <div class="text-[10px] text-[#666]">
+              <div class="text-sm text-responsive_title font-bold">{{ work.company }}</div>
+              <div class="text-xs text-responsive_title font-bold text-[#666]">{{ work.job }}</div>
+              <div class="text-responsive_content text-[#666]">
                 {{ new Date(work.startDate).toLocaleDateString() }} -
                 {{ work.isPresent ? '現今': new Date(work.endDate).toLocaleDateString() }}
               </div>
-              <p class="text-xs">{{ work.description }}</p>
+              <p class="text-responsive_content">{{ work.description }}</p>
             </div>
           </div>
           <div>
-            <div class="mb-1 font-bold">Education</div>
+            <div class="mb-1 text-responsive_title font-bold">Education</div>
             <div v-for="(edu, index) in formData.educations" :key="`${edu.company}${index}`" class="mb-2 flex flex-col">
-              <div class="text-sm font-bold">
-                {{ edu.school }}<span class="mx-3 text-xs">{{ edu.name }}</span>
+              <div class="text-responsive_content font-bold">
+                {{ edu.school }}<span class="mx-3 text-responsive_content">{{ edu.name }}</span>
               </div>
-              <div class="text-xs font-bold text-[#666]">{{ edu.major }}</div>
-              <div class="text-[10px] text-[#666]">
+              <div class="text-responsive_content  font-bold text-[#666]">{{ edu.major }}</div>
+              <div class="text-responsive_content text-[#666]">
                 {{ new Date(edu.startDate).toLocaleDateString() }} - {{ edu.isPresent ? '現今': new Date(edu.endDate).toLocaleDateString() }}
               </div>
             </div>
@@ -456,5 +463,11 @@ onMounted(() => {})
 ::-webkit-scrollbar {
   width: 1px;
   height: 1px;
+}
+.text-responsive_content {
+  font-size: clamp(0rem, 2vw, 0.875rem); /* 最小值 1rem，最大值 2.5rem，根據視窗寬度調整 */
+}
+.text-responsive_title {
+  font-size: clamp(0rem, 4vw, 1.25rem); /* 最小值 1rem，最大值 2.5rem，根據視窗寬度調整 */
 }
 </style>

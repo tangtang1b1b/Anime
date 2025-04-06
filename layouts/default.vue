@@ -16,7 +16,6 @@ allData.value = data
     </n-config-provider>
     <LayoutFooter />
     <div id="modalsField"></div>
-    <!-- <Cursor colorful /> -->
   </div>
 </template>
 
